@@ -66,6 +66,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "72b3254f16251a8381aa12e40e3c4d2f0199f8c6508fbecb9d91f575e0fbb8c6"
 
 [[package]]
+name = "base64"
+version = "0.23.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b25655df2c3cdd83c5e5b293b88acd880332b2ddadd7c30ac43144fdc0033da9"
+
+[[package]]
 name = "block-buffer"
 version = "0.10.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -172,7 +178,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "617aa0908ecdf6b29a7b3e379195fc779b4d485937e71aaa997f4d19c9c991d3"
 dependencies = [
  "async-trait",
- "base64",
+ "base64 0.22.1",
  "bytes",
  "cookie",
  "futures",
@@ -1599,7 +1605,7 @@ dependencies = [
 name = "vamo"
 version = "0.0.9-beta.7"
 dependencies = [
- "base64",
+ "base64 0.23.0",
  "caramelo",
  "deboa",
  "deboa-extras",
