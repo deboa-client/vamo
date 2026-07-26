@@ -29,7 +29,7 @@ deboa-extras = { workspace = true, default-features = false, optional = true }
 vamo = { workspace = true }
 proc-macro2 = "1.0.103"
 serde = "1.0.228"
-syn = { version = "2.0", features = ["full"] }
+syn = { version = "3.0", features = ["full"] }
 quote = "1.0.41"
 http = "1.4.2"
 regex = { version = "1.12.4", default-features = false }
