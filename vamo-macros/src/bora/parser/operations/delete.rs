@@ -7,7 +7,6 @@ use syn::{
 
 use crate::bora::parser::common::field::{NameStruct, PathStruct};
 
-#[derive(Debug)]
 pub struct DeleteStruct {
     pub fields: Punctuated<DeleteFieldEnum, Token![,]>,
 }
@@ -20,7 +19,6 @@ impl Parse for DeleteStruct {
     }
 }
 
-#[derive(Debug)]
 #[allow(non_camel_case_types)]
 pub enum DeleteFieldEnum {
     name(NameStruct),

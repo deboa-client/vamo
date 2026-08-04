@@ -30,7 +30,7 @@
 //! ```rust, compile_fail
 //! use deboa::{Result, serde::RequestBody};
 //! use deboa_extras::http::serde::json::JsonBody;
-//! use deboa_tokio::Client;
+//! use deboa_tokio::TokioClient;
 //! use serde::{Deserialize, Serialize};
 //! use vamo::{Vamo, resource::ResourceMethod};
 //! use vamo_macros::Resource;
@@ -48,7 +48,7 @@
 //!
 //! #[tokio::main]
 //! async fn main() -> Result<()> {
-//!     let mut vamo = Vamo::<Client>::new("https://jsonplaceholder.typicode.com")?;
+//!     let mut vamo = Vamo::<TokioClient>::new("https://jsonplaceholder.typicode.com")?;
 //!
 //!     // Create a new post
 //!     let mut new_post = Post {

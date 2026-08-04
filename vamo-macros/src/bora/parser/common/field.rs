@@ -3,7 +3,6 @@ use syn::{
     LitStr, Token, Type,
 };
 
-#[derive(Debug)]
 pub struct NameStruct {
     _equal_token: Token![=],
     pub value: LitStr,
@@ -15,7 +14,6 @@ impl Parse for NameStruct {
     }
 }
 
-#[derive(Debug)]
 pub struct PathStruct {
     _equal_token: Token![=],
     pub value: LitStr,
@@ -27,7 +25,6 @@ impl Parse for PathStruct {
     }
 }
 
-#[derive(Debug)]
 pub struct ReqBodyStruct {
     _equal_token: Token![=],
     pub value: Type,
@@ -39,7 +36,6 @@ impl Parse for ReqBodyStruct {
     }
 }
 
-#[derive(Debug)]
 pub struct ResBodyStruct {
     _equal_token: Token![=],
     pub value: Type,
@@ -51,7 +47,6 @@ impl Parse for ResBodyStruct {
     }
 }
 
-#[derive(Debug)]
 pub struct FormatStruct {
     _equal_token: Token![=],
     pub value: LitStr,

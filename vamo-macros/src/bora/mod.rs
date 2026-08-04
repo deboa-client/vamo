@@ -16,7 +16,7 @@
 //!
 //! ```rust, no_run, compile_fail
 //! use deboa::{errors::DeboaError, Result};
-//! use deboa_tokio::Client;
+//! use deboa_tokio::TokioClient;
 //! use vamo::Vamo;
 //! use vamo_macros::bora;
 //!
@@ -40,7 +40,7 @@
 //!
 //! #[tokio::main]
 //! async fn main() -> Result<()> {
-//!     let client = Vamo::<Client>::new("https://jsonplaceholder.typicode.com")?;
+//!     let client = Vamo::<TokioClient>::new("https://jsonplaceholder.typicode.com")?;
 //!
 //!     let mut post_service = PostService::new(client);
 //!

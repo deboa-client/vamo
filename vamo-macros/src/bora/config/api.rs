@@ -30,9 +30,8 @@ fn impl_function(
     api_params: &TS2,
     req_body_type: &Type,
     res_body_type: &Type,
-    unit_type: &Type,
 ) -> TS2 {
-    if res_body_type.eq(unit_type) {
+    if matches!(res_body_type, Type::Tuple(_)) {
         quote! {
             pub async fn #method_name(&mut self, #api_params body: #req_body_type) -> VamoResult<#res_body_type> {
                 self.api
@@ -116,17 +115,14 @@ fn get_operation(get: &GetStruct, acc: &mut (&mut TS2, &mut TS2)) {
         });
 }
 
-fn post_operation(post: &PostStruct, acc: &mut (&mut TS2, &mut TS2)) {
+fn post_operation(post: &PostStruct, acc: &mut (&mut TS2, &mut TS2), unit_type: &Type) {
     let fields = &post.fields;
-
-    let unit_type =
-        Type::Tuple(TypeTuple { paren_token: Paren::default(), elems: Punctuated::new() });
 
     let method = parse_str::<syn::Ident>("post").unwrap();
     let mut method_name = Ident::new("ident", Span::call_site());
     let mut api_path = LitStr::new("lit", Span::call_site());
     let mut req_body_type = Type::Verbatim(TS2::new());
-    let mut res_body_type = &unit_type;
+    let mut res_body_type = unit_type;
     let mut api_params = TS2::new();
     let mut format_name = Ident::new("ident", Span::call_site());
     let mut format_module = Ident::new("ident", Span::call_site());
@@ -180,21 +176,17 @@ fn post_operation(post: &PostStruct, acc: &mut (&mut TS2, &mut TS2)) {
             &api_params,
             &req_body_type,
             res_body_type,
-            &unit_type,
         ));
 }
 
-fn put_operation(put: &PutStruct, acc: &mut (&mut TS2, &mut TS2)) {
+fn put_operation(put: &PutStruct, acc: &mut (&mut TS2, &mut TS2), unit_type: &Type) {
     let fields = &put.fields;
-
-    let unit_type =
-        Type::Tuple(TypeTuple { paren_token: Paren::default(), elems: Punctuated::new() });
 
     let method = parse_str::<syn::Ident>("put").unwrap();
     let mut method_name = Ident::new("ident", Span::call_site());
     let mut api_path = LitStr::new("lit", Span::call_site());
     let mut req_body_type = Type::Verbatim(TS2::new());
-    let mut res_body_type = &unit_type;
+    let mut res_body_type = unit_type;
     let mut api_params = TS2::new();
     let mut format_name = Ident::new("ident", Span::call_site());
     let mut format_module = Ident::new("ident", Span::call_site());
@@ -250,22 +242,18 @@ fn put_operation(put: &PutStruct, acc: &mut (&mut TS2, &mut TS2)) {
             &api_params,
             &req_body_type,
             res_body_type,
-            &unit_type,
         ));
 }
 
-fn patch_operation(patch: &PatchStruct, acc: &mut (&mut TS2, &mut TS2)) {
+fn patch_operation(patch: &PatchStruct, acc: &mut (&mut TS2, &mut TS2), unit_type: &Type) {
     let fields = &patch.fields;
-
-    let unit_type =
-        Type::Tuple(TypeTuple { paren_token: Paren::default(), elems: Punctuated::new() });
 
     let method = parse_str::<syn::Ident>("patch").unwrap();
     let mut method_name = Ident::new("ident", Span::call_site());
     let mut api_path = LitStr::new("lit", Span::call_site());
     let mut api_params = TS2::new();
     let mut req_body_type = Type::Verbatim(TS2::new());
-    let mut res_body_type = &unit_type;
+    let mut res_body_type = unit_type;
     let mut format_name = Ident::new("ident", Span::call_site());
     let mut format_module = Ident::new("ident", Span::call_site());
 
@@ -320,8 +308,7 @@ fn patch_operation(patch: &PatchStruct, acc: &mut (&mut TS2, &mut TS2)) {
             &method_name,
             &api_params,
             &req_body_type,
-            res_body_type,
-            &unit_type,
+            &res_body_type,
         ));
 }
 
@@ -383,18 +370,23 @@ pub fn bora(attr: TokenStream, item: TokenStream) -> TokenStream {
     };
 
     let struct_name = parse_str::<syn::Ident>(name.as_str()).unwrap();
-
     let mut imports = TS2::new();
     let mut struct_impl = TS2::new();
+
+    let unit_type = Type::Tuple(TypeTuple {
+        paren_token: Paren(Span::call_site()),
+        elems: Punctuated::new(),
+        attrs: Vec::new(), // Empty list means no elements
+    });
 
     root.operations
         .iter()
         .fold((&mut imports, &mut struct_impl), |mut acc, op| {
             match op {
                 OperationEnum::get(get) => get_operation(get, &mut acc),
-                OperationEnum::post(post) => post_operation(post, &mut acc),
-                OperationEnum::put(put) => put_operation(put, &mut acc),
-                OperationEnum::patch(patch) => patch_operation(patch, &mut acc),
+                OperationEnum::post(post) => post_operation(post, &mut acc, &unit_type),
+                OperationEnum::put(put) => put_operation(put, &mut acc, &unit_type),
+                OperationEnum::patch(patch) => patch_operation(patch, &mut acc, &unit_type),
                 OperationEnum::delete(delete) => delete_operation(delete, &mut acc),
             }
 
