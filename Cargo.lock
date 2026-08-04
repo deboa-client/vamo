@@ -1563,7 +1563,7 @@ dependencies = [
 
 [[package]]
 name = "vamo"
-version = "0.0.9"
+version = "0.1.0"
 dependencies = [
  "base64",
  "caramelo",
@@ -1576,7 +1576,7 @@ dependencies = [
 
 [[package]]
 name = "vamo-macros"
-version = "0.0.9"
+version = "0.1.0"
 dependencies = [
  "deboa",
  "deboa-extras",
