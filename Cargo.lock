@@ -192,9 +192,9 @@ dependencies = [
 
 [[package]]
 name = "deboa-extras"
-version = "0.0.9-beta.15"
+version = "0.0.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "811e7b3bb5cd330554c90f0d120856b53692d49cb1152e07957f9857909a2f94"
+checksum = "f6e4be2c12dcfe853e40f04981a4cfdc795093ae6b2100e407954801f8426557"
 dependencies = [
  "bytes",
  "deboa",
