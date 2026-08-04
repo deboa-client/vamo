@@ -42,7 +42,7 @@ use crate::resource::resource as resource_macro;
 /// ## Example
 ///
 /// ```rust, no_run, compile_fail
-/// use deboa_tokio::Client;
+/// use deboa_tokio::TokioClient;
 /// use serde::{Deserialize, Serialize};
 /// use vamo::Vamo;
 /// use vamo_macros::bora;
@@ -59,7 +59,7 @@ use crate::resource::resource as resource_macro;
 /// #[tokio::main]
 /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
 ///     let mut vamo = Vamo::new("https://jsonplaceholder.typicode.com")?;
-///     vamo.client(deboa_tokio::Client::default());
+///     vamo.client(deboa_tokio::TokioClient::default());
 ///     let mut post_service = PostService::new(vamo);
 ///     let post = post_service.get_post(1).await?;
 ///     println!("Post: {:?}", post);
@@ -103,7 +103,7 @@ use crate::resource::resource as resource_macro;
 ///     };
 ///
 ///     let mut vamo = Vamo::new("https://jsonplaceholder.typicode.com")?;
-///     vamo.client(deboa_tokio::Client::default());
+///     vamo.client(deboa_tokio::TokioClient::default());
 ///     let mut post_service = PostService::new(vamo);
 ///     let created_post = post_service.create_post(post).await?;
 ///     println!("Created post: {:?}", created_post);
@@ -132,7 +132,7 @@ use crate::resource::resource as resource_macro;
 /// #[tokio::main]
 /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
 ///     let mut vamo = Vamo::new("https://jsonplaceholder.typicode.com")?;
-///     vamo.client(deboa_tokio::Client::default());
+///     vamo.client(deboa_tokio::TokioClient::default());
 ///     let mut post_service = PostService::new(vamo);
 ///     post_service.delete_post(1).await?;
 ///     println!("Post deleted");
@@ -171,7 +171,7 @@ use crate::resource::resource as resource_macro;
 /// #[tokio::main]
 /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
 ///     let mut vamo = Vamo::new("https://jsonplaceholder.typicode.com")?;
-///     vamo.client(deboa_tokio::Client::default());
+///     vamo.client(deboa_tokio::TokioClient::default());
 ///     let mut post_service = PostService::new(vamo);
 ///     let post = post_service.put_post(1, Post { id: 1, title: "Post 1".to_string() }).await?;
 ///     println!("Post updated: {:?}", post);
@@ -210,7 +210,7 @@ use crate::resource::resource as resource_macro;
 /// #[tokio::main]
 /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
 ///     let mut vamo = Vamo::new("https://jsonplaceholder.typicode.com")?;
-///     vamo.client(deboa_tokio::Client::default());
+///     vamo.client(deboa_tokio::TokioClient::default());
 ///     let mut post_service = PostService::new(vamo);
 ///     let post = post_service.patch_post(1, Post { id: 1, title: "Post 1".to_string() }).await?;
 ///     println!("Post updated: {:?}", post);
@@ -259,7 +259,7 @@ pub fn bora(attr: TokenStream, item: TokenStream) -> TokenStream {
 /// #[tokio::main]
 /// async fn main() -> Result<(), Box<dyn std::error::Error>> {
 ///     let mut vamo = Vamo::new("https://jsonplaceholder.typicode.com")?;
-///     vamo.client(deboa_tokio::Client::default());
+///     vamo.client(deboa_tokio::TokioClient::default());
 ///     let mut user = User { id: "1".to_string() };
 ///     let response = vamo
 ///         .create(&mut user)?

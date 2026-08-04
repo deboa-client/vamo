@@ -14,7 +14,7 @@ use deboa::{
 };
 use http::{
     header::{self, CONTENT_TYPE, HOST},
-    HeaderMap, HeaderName, HeaderValue, Method,
+    HeaderMap, HeaderName, HeaderValue, Method, Version,
 };
 use serde::Serialize;
 use url::Url;
@@ -28,6 +28,7 @@ mod tests;
 pub struct Vamo<C> {
     client: C,
     base_url: Url,
+    version: Version,
     method: Method,
     path: String,
     headers: HeaderMap,
@@ -91,10 +92,26 @@ where
             client: C::default(),
             base_url,
             path: String::new(),
+            version: Version::HTTP_2,
             method: Method::GET,
             headers,
             body: Arc::new([]),
         })
+    }
+
+    /// Set the version of the request.
+    ///
+    /// # Arguments
+    ///
+    /// * `version` - The version of the request.
+    ///
+    /// # Returns
+    ///
+    /// * `&mut Self` - The builder.
+    #[inline]
+    pub fn version(&mut self, version: Version) -> &mut Self {
+        self.version = version;
+        self
     }
 
     /// Set the client to be used for requests.
@@ -375,6 +392,7 @@ where
         }
 
         let request = DeboaRequest::from(base_url.as_str())?
+            .version(self.version)
             .method(self.method.clone())
             .headers(self.headers.clone())
             .bytes(&self.body)
