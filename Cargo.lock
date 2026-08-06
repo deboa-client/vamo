@@ -162,15 +162,16 @@ dependencies = [
 
 [[package]]
 name = "deboa"
-version = "0.1.1"
+version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fcf9d17f9a19c7149b85491abd625bfbd760d40af973732351625573256d68ef"
+checksum = "fb779f386cdce549cd46db06617040fef67f4f9e57ee2f6fe01557fdf7280a8f"
 dependencies = [
  "async-lock",
  "base64",
  "bytes",
  "cookie",
  "futures",
+ "hashbrown 0.17.1",
  "http",
  "http-body",
  "http-body-util",
@@ -452,6 +453,11 @@ name = "hashbrown"
 version = "0.17.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ed5909b6e89a2db4456e54cd5f673791d7eca6732202bbf2a9cc504fe2f9b84a"
+dependencies = [
+ "allocator-api2",
+ "equivalent",
+ "foldhash",
+]
 
 [[package]]
 name = "http"
@@ -1563,7 +1569,7 @@ dependencies = [
 
 [[package]]
 name = "vamo"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "base64",
  "caramelo",
@@ -1576,7 +1582,7 @@ dependencies = [
 
 [[package]]
 name = "vamo-macros"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "deboa",
  "deboa-extras",
