@@ -1,3 +1,4 @@
+#![allow(unused)]
 use crate::{
     resource::{Resource, ResourceMethod},
     Vamo,
@@ -119,25 +120,24 @@ fn test_delete() -> Result<()> {
 
 #[test]
 fn test_header() -> std::result::Result<(), Box<dyn Error>> {
-    let mut vamo = Vamo::<SuperClient>::new(test_url(None))?;
-    let header = "Content-Type".parse::<HeaderName>()?;
-    vamo.header(header, "application/json");
+    let vamo = Vamo::<SuperClient>::new(test_url(None))?
+        .header("Content-Type".parse::<HeaderName>()?, "application/json");
     expect(vamo.headers).to_have(header_value("Content-Type", r"application/json"));
     Ok(())
 }
 
 #[test]
 fn test_basic_auth() -> Result<()> {
-    let mut vamo = Vamo::<SuperClient>::new(test_url(None))?;
-    vamo.basic_auth("username", "password");
+    let vamo = Vamo::<SuperClient>::new(test_url(None))?
+        .header(header::AUTHORIZATION, "Basic dXNlcm5hbWU6cGFzc3dvcmQ=");
     expect(vamo.headers).to_have(header_value("Authorization", "Basic dXNlcm5hbWU6cGFzc3dvcmQ="));
     Ok(())
 }
 
 #[test]
 fn test_jwt_auth() -> Result<()> {
-    let mut vamo = Vamo::<SuperClient>::new(test_url(None))?;
-    vamo.bearer_auth("token");
+    let vamo =
+        Vamo::<SuperClient>::new(test_url(None))?.header(header::AUTHORIZATION, "Bearer token");
     expect(vamo.headers).to_have(header_value(header::AUTHORIZATION, "Bearer token"));
     Ok(())
 }

@@ -3,7 +3,6 @@
 use std::sync::Arc;
 
 use crate::resource::{Resource, ResourceMethod};
-use base64::{engine::general_purpose::STANDARD, Engine as _};
 use deboa::{
     errors::{DeboaError, RequestError},
     request::DeboaRequest,
@@ -13,7 +12,7 @@ use deboa::{
     Result,
 };
 use http::{
-    header::{self, CONTENT_TYPE, HOST},
+    header::{CONTENT_TYPE, HOST},
     HeaderMap, HeaderName, HeaderValue, Method, Version,
 };
 use serde::Serialize;
@@ -37,7 +36,7 @@ pub struct Vamo<C> {
 
 impl<C> Vamo<C>
 where
-    C: deboa::HttpClient + Default,
+    C: deboa::HttpClient,
 {
     /// Create a new Vamo instance.
     ///
@@ -60,7 +59,10 @@ where
     ///
     /// If the URL is invalid, or headers are invalid, the function will panic.
     ///
-    pub fn new<U: IntoUrl>(url: U) -> Result<Vamo<C>> {
+    pub fn new<U: IntoUrl>(url: U) -> Result<Vamo<C>>
+    where
+        C: Default,
+    {
         let base_url = url.into_url()?;
         let mut headers = HeaderMap::new();
         let host = base_url.host_str();
@@ -99,83 +101,37 @@ where
         })
     }
 
-    /// Set the version of the request.
+    /// Create a new Vamo instance from an existing client.
     ///
     /// # Arguments
     ///
-    /// * `version` - The version of the request.
+    /// * `client` - The client to use.
     ///
     /// # Returns
     ///
-    /// * `&mut Self` - The builder.
-    #[inline]
-    pub fn version(&mut self, version: Version) -> &mut Self {
-        self.version = version;
-        self
-    }
-
-    /// Set the client to be used for requests.
-    ///
-    /// # Arguments
-    ///
-    /// * `client` - The client to be used for requests.
-    ///
-    /// # Returns
-    ///
-    /// * `&mut Self` - The builder.
-    #[inline]
-    pub fn client(&mut self, client: C) -> &mut Self {
-        self.client = client;
-        self
-    }
-
-    /// Set a header for the request.
-    ///
-    /// # Arguments
-    ///
-    /// * `key` - The header key.
-    /// * `value` - The header value.
-    ///
-    /// # Returns
-    ///
-    /// * `&mut Self` - The builder.
+    /// * `Result<Vamo<C>>` - The builder.
     ///
     /// # Examples
     ///
-    /// ``` rust, ignore
-    /// let mut vamo = Vamo::<deboa_tokio::Client>::new("https://api.example.com")?;
-    /// let response = vamo.get("/api")
-    ///    .header("Content-Type", "application/json")
-    ///    .send()
-    ///    .await?;
+    /// ```rust, ignore
+    /// let mut vamo = Vamo::<deboa_tokio::Client>::from_client(deboa_tokio::Client::default())?;
+    /// let response = vamo.get("/path").send().await?;
     /// ```
-    #[inline]
-    pub fn header(&mut self, key: HeaderName, value: &str) -> &mut Self {
-        self.headers
-            .insert(key, HeaderValue::from_str(value).unwrap());
-        self
-    }
-
-    /// Set the body of the request.
     ///
-    /// # Arguments
+    /// # Panics
     ///
-    /// * `body_type` - The type of the body.
-    /// * `body` - The body to be set.
+    /// If the URL is invalid, or headers are invalid, the function will panic.
     ///
-    /// # Returns
-    ///
-    /// * `Result<&mut Self>` - The builder.
-    #[inline]
-    pub fn body_as<T: RequestBody, B: Serialize>(
-        &mut self,
-        body_type: T,
-        body: B,
-    ) -> Result<&mut Self> {
-        self.body = body_type
-            .serialize(body)?
-            .into();
-        Ok(self)
+    pub fn from_client(client: C) -> Result<Vamo<C>> {
+        Ok(Vamo {
+            client,
+            base_url: Url::parse("http://localhost").unwrap(),
+            path: String::new(),
+            version: Version::HTTP_2,
+            method: Method::GET,
+            headers: HeaderMap::new(),
+            body: Arc::new([]),
+        })
     }
 
     /// Set the method of the request.
@@ -215,7 +171,7 @@ where
     ///
     /// ``` rust, ignore
     /// let mut vamo = Vamo::<deboa_tokio::Client>::new("https://api.example.com")?;
-    /// let response = vamo.post("/path").body_as(JSON, body).send().await?;
+    /// let response = vamo.body_as(JSON, body).post("/path")send().await?;
     /// ```
     #[inline]
     pub fn post(&mut self, path: &str) -> &mut Self {
@@ -238,7 +194,7 @@ where
     ///
     /// ``` rust, ignore
     /// let mut vamo = Vamo::<deboa_tokio::Client>::new("https://api.example.com")?;
-    /// let response = vamo.put("/path/1").body_as(JSON, body).send().await?;
+    /// let response = vamo.body_as(JSON, body).put("/path/1").send().await?;
     /// ```
     #[inline]
     pub fn put(&mut self, path: &str) -> &mut Self {
@@ -261,7 +217,7 @@ where
     ///
     /// ``` rust, ignore
     /// let mut vamo = Vamo::<deboa_tokio::Client>::new("https://api.example.com")?;
-    /// let response = vamo.patch("/path/1").body_as(JsonBody, body).send().await?;
+    /// let response = vamo.body_as(JsonBody, body).patch("/path/1").send().await?;
     /// ```
     #[inline]
     pub fn patch(&mut self, path: &str) -> &mut Self {
@@ -293,58 +249,114 @@ where
         self
     }
 
-    /// Set the bearer token for the request.
+    /// Set the base URL for the request.
     ///
     /// # Arguments
     ///
-    /// * `token` - The bearer token.
+    /// * `base_url` - The base URL for the request.
     ///
     /// # Returns
     ///
-    /// * `&mut Self` - The builder.
+    /// * `Self` - The builder.
+    ///
+    /// * Notes
+    ///
+    /// This method consumes vamo, make sure to call it before get, post, put, patch, delete and send methods.
+    #[inline]
+    pub fn base_url(mut self, base_url: Url) -> Self {
+        self.base_url = base_url;
+        self
+    }
+
+    /// Set the version of the request.
+    ///
+    /// # Arguments
+    ///
+    /// * `version` - The version of the request.
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - The builder.
+    ///
+    /// * Notes
+    ///
+    /// This method consumes vamo, make sure to call it before get, post, put, patch, delete and send methods.
+    #[inline]
+    pub fn version(mut self, version: Version) -> Self {
+        self.version = version;
+        self
+    }
+
+    /// Set the client to be used for requests.
+    ///
+    /// # Arguments
+    ///
+    /// * `client` - The client to be used for requests.
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - The builder.
+    ///
+    /// * Notes
+    ///
+    /// This method consumes vamo, make sure to call it before get, post, put, patch, delete and send methods.
+    #[inline]
+    pub fn client(mut self, client: C) -> Self {
+        self.client = client;
+        self
+    }
+
+    /// Set a header for the request.
+    ///
+    /// # Arguments
+    ///
+    /// * `key` - The header key.
+    /// * `value` - The header value.
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - The builder.
     ///
     /// # Examples
     ///
     /// ``` rust, ignore
     /// let mut vamo = Vamo::<deboa_tokio::Client>::new("https://api.example.com")?;
     /// let response = vamo.get("/api")
-    ///    .bearer_auth("your-token-here")
+    ///    .header("Content-Type", "application/json")
     ///    .send()
     ///    .await?;
     /// ```
+    ///
+    /// * Notes
+    ///
+    /// This method consumes vamo, make sure to call it before get, post, put, patch, delete and send methods.
     #[inline]
-    pub fn bearer_auth(&mut self, token: &str) -> &mut Self {
-        self.header(header::AUTHORIZATION, format!("Bearer {token}").as_str());
+    pub fn header(mut self, key: HeaderName, value: &str) -> Self {
+        self.headers
+            .insert(key, HeaderValue::from_str(value).unwrap());
         self
     }
 
-    /// Set the basic authentication for the request.
+    /// Set the body of the request.
     ///
     /// # Arguments
     ///
-    /// * `username` - The username.
-    /// * `password` - The password.
+    /// * `body_type` - The type of the body.
+    /// * `body` - The body to be set.
     ///
     /// # Returns
     ///
-    /// * `&mut Self` - The builder.
+    /// * `Result<Self>` - The builder.
     ///
-    /// # Examples
+    /// * Notes
     ///
-    /// ``` rust, ignore
-    /// let mut vamo = Vamo::<<deboa_tokio::Client>>::new("https://api.example.com")?;
-    /// let response = vamo.get("/api")
-    ///    .basic_auth("username", "password")
-    ///    .send()
-    ///    .await?;
-    /// ```
+    /// This method consumes vamo, make sure to call it before get, post, put, patch, delete and send methods.
     #[inline]
-    pub fn basic_auth(&mut self, username: &str, password: &str) -> &mut Self {
-        self.header(
-            header::AUTHORIZATION,
-            format!("Basic {}", STANDARD.encode(format!("{username}:{password}"))).as_str(),
-        );
-        self
+    pub fn body_as<T: RequestBody, B: Serialize>(mut self, body_type: T, body: B) -> Result<Self> {
+        self.body = body_type
+            .serialize(body)?
+            .into();
+        Ok(self)
     }
 
     /// Send the request.
@@ -368,6 +380,7 @@ where
     ///
     /// * The request is sent using the `Deboa` client.
     /// * The response is returned as a `DeboaResponse`.
+    /// * This is the last method before response is returned.
     ///
     #[inline]
     pub async fn send(&mut self) -> Result<DeboaResponse> {
