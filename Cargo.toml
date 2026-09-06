@@ -22,10 +22,12 @@ base64 = "0.23.0"
 deboa = { version = "0.1.5-beta.2" }
 #deboa-extras = { path = "../deboa-contrib/deboa-extras" }
 deboa-extras = { version  = "0.1.1-beta.2" }
-deboa-fory = { path = "../deboa-contrib/deboa-fory" }
+#deboa-fory = { path = "../deboa-contrib/deboa-fory" }
+deboa-fory = { version = "0.1.8-beta.2" }
 #deboa-macros = { path = "../deboa/deboa-macros" }
 deboa-macros = { version = "0.1.0-beta.7" }
-deboa-tokio = { path = "../deboa-tokio/deboa-tokio" }
+#deboa-tokio = { path = "../deboa-tokio/deboa-tokio" }
+deboa-tokio = { version = "0.1.4-beta.3" }
 http = "1.5.0"
 serde = "1.0.228"
 vamo = { path = "vamo", version = "0.1.2-beta.2" }
