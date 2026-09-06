@@ -65,30 +65,23 @@ where
     {
         let base_url = url.into_url()?;
         let mut headers = HeaderMap::new();
-        let host = base_url.host_str();
-        if host.is_none() {
-            return Err(DeboaError::Request(RequestError::UrlParse {
-                message: "Invalid URL: Missing host.".to_string(),
-            }));
-        }
+        let host = base_url
+            .host_str()
+            .ok_or_else(|| {
+                DeboaError::Request(RequestError::UrlParse {
+                    message: "Invalid URL: Missing host.".to_string(),
+                })
+            })?;
 
-        let host_header = HeaderValue::from_str(
-            base_url
-                .host_str()
-                .unwrap(),
-        );
-        if let Err(e) = host_header {
-            return Err(DeboaError::Header { message: e.to_string() });
-        }
+        let host_header = HeaderValue::from_str(host)
+            .map_err(|e| DeboaError::Header { message: e.to_string() })?;
 
-        headers.insert(HOST, host_header.unwrap());
+        headers.insert(HOST, host_header);
 
-        let content_type_header = HeaderValue::from_str("application/json");
-        if let Err(e) = content_type_header {
-            return Err(DeboaError::Header { message: e.to_string() });
-        }
+        let content_type_header = HeaderValue::from_str("application/json")
+            .map_err(|e| DeboaError::Header { message: e.to_string() })?;
 
-        headers.insert(CONTENT_TYPE, content_type_header.unwrap());
+        headers.insert(CONTENT_TYPE, content_type_header);
 
         Ok(Vamo {
             client: C::default(),

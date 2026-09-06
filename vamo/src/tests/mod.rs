@@ -5,11 +5,11 @@ use crate::{
 };
 use caramelo::{
     expect,
-    matchers::{eq, header_value},
+    matchers::{eq, header_value, method},
 };
-use deboa::{url::IntoUrl, HttpClient, Result};
+use deboa::{url::IntoUrl, HttpClient, Result, TestResult};
 use deboa_extras::serde::json::JsonBody;
-use http::{header, HeaderName, Method};
+use http::{header, HeaderName, Method, Version};
 use serde::Serialize;
 use std::error::Error;
 
@@ -64,8 +64,11 @@ pub fn test_url(port: Option<u16>) -> String {
 
 #[test]
 fn test_create_vamo() -> Result<()> {
-    let vamo = Vamo::<SuperClient>::new(test_url(None))?;
-    expect(vamo.base_url).to_be(eq(test_url(None).into_url()?));
+    let mut vamo = Vamo::<SuperClient>::new(test_url(None))?;
+    let mut user = User { id: 1, name: "John Doe".to_string() };
+    vamo.create(&mut user)?;
+    expect(vamo.path).to_be(eq("/users"));
+    expect(vamo.method).to_be(eq(Method::POST));
     Ok(())
 }
 
@@ -75,6 +78,56 @@ fn test_load_resource() -> Result<()> {
     let mut user = User { id: 1, name: "John Doe".to_string() };
     vamo.load(&mut user)?;
     expect(vamo.path).to_be(eq("/users/1"));
+    Ok(())
+}
+
+#[test]
+fn test_update_vamo() -> Result<()> {
+    let mut vamo = Vamo::<SuperClient>::new(test_url(None))?;
+    let mut user = User { id: 1, name: "John Doe".to_string() };
+    vamo.update(&mut user)?;
+    expect(vamo.path).to_be(eq("/users/1"));
+    expect(vamo.method).to_be(eq(Method::PUT));
+    Ok(())
+}
+
+#[test]
+fn test_edit_vamo() -> Result<()> {
+    let mut vamo = Vamo::<SuperClient>::new(test_url(None))?;
+    let mut user = User { id: 1, name: "John Doe".to_string() };
+    vamo.edit(&mut user)?;
+    expect(vamo.path).to_be(eq("/users/1"));
+    expect(vamo.method).to_be(eq(Method::PATCH));
+    Ok(())
+}
+
+#[test]
+fn test_remove_vamo() -> Result<()> {
+    let mut vamo = Vamo::<SuperClient>::new(test_url(None))?;
+    let mut user = User { id: 1, name: "John Doe".to_string() };
+    vamo.remove(&mut user)?;
+    expect(vamo.path).to_be(eq("/users/1"));
+    expect(vamo.method).to_be(eq(Method::DELETE));
+    Ok(())
+}
+
+#[test]
+fn test_vamo_com_tudo() -> Result<()> {
+    let mut vamo = Vamo::new(test_url(None))?
+        .client(SuperClient::default())
+        .version(Version::HTTP_11);
+    vamo.get("/posts");
+    expect(vamo.method).to_be(eq(Method::GET));
+    Ok(())
+}
+
+#[test]
+fn test_vamo_from_cliet() -> TestResult<()> {
+    let mut vamo = Vamo::from_client(SuperClient::default())?
+        .base_url(test_url(None).parse()?)
+        .version(Version::HTTP_11);
+    vamo.get("/posts");
+    expect(vamo.method).to_be(eq(Method::GET));
     Ok(())
 }
 
