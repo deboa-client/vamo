@@ -43,6 +43,5 @@ lto = true
 codegen-units = 1
 panic = "abort"
 
-[patch.crates-io]
-# Replace 'rand' from crates.io with your local modified version
-deboa = { path = "../deboa/deboa" }
+#[patch.crates-io]
+#deboa = { path = "../deboa/deboa" }

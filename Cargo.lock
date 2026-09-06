@@ -362,6 +362,8 @@ dependencies = [
 [[package]]
 name = "deboa"
 version = "0.1.5-beta.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bd59fe2fa37660e6ba3d0cda40e9a182e992db6081e1f62a82e69465170afdc9"
 dependencies = [
  "async-lock",
  "base64",
