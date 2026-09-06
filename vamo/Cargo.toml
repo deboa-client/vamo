@@ -28,4 +28,4 @@ serde = { workspace = true }
 url = "2.5.8"
 
 [dev-dependencies]
-caramelo = "0.1.1-beta.4"
+caramelo = "0.1.4"
