@@ -21,14 +21,14 @@ let response = vamo
     .await?;
 ```
 
-## Subprojects
+## Subcrates
 
-### [vamo](https://github.com/ararog/deboa/tree/develop/vamo)
+### [vamo](https://github.com/deboa-client/vamo/tree/main/vamo)
 
 Nice wrapper on top of deboa for dry rest client. Set base url once
 and use it for all requests.
 
-### [vamo-macros](https://github.com/ararog/deboa/tree/develop/vamo-macros)
+### [vamo-macros](https://github.com/deboa-client/vamo/tree/main/vamo-macros)
 
 Vamo macros is a collection of macros to make possible use structs as resources to be sent over vamo as client.
 It is also the new home of bora macro.
