@@ -189,7 +189,9 @@ dependencies = [
 
 [[package]]
 name = "deboa"
-version = "0.1.5-beta.2"
+version = "0.1.5-beta.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "695df99f6e8a191aa84884124d7bbcff1b65506e947234ac03d722578ba8742b"
 dependencies = [
  "async-fn-stream",
  "async-lock",
@@ -216,7 +218,9 @@ dependencies = [
 
 [[package]]
 name = "deboa-extras"
-version = "0.1.1-beta.2"
+version = "0.1.1-beta.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7e010a6eefb987288370212dfea5542881fe2a419a76259396a40abc654a686d"
 dependencies = [
  "bytes",
  "deboa",
@@ -633,6 +637,8 @@ dependencies = [
 [[package]]
 name = "hyper-body-utils"
 version = "0.1.18"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dc562691bacb4a4dbb2255b7321d7b69a635e21403a0e8d6351ddca0790b6926"
 dependencies = [
  "async-fn-stream",
  "bytes",
@@ -1906,7 +1912,7 @@ dependencies = [
 
 [[package]]
 name = "vamo"
-version = "0.1.2-beta.2"
+version = "0.1.2-beta.3"
 dependencies = [
  "base64",
  "caramelo",
@@ -1919,7 +1925,7 @@ dependencies = [
 
 [[package]]
 name = "vamo-macros"
-version = "0.1.2-beta.2"
+version = "0.1.2-beta.3"
 dependencies = [
  "deboa",
  "deboa-extras",
