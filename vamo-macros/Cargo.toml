@@ -24,8 +24,8 @@ msgpack = ["deboa-extras/msgpack"]
 proc-macro = true
 
 [dependencies]
-deboa = { workspace = true, default-features = false }
-deboa-extras = { workspace = true, default-features = false, optional = true }
+deboa = { workspace = true }
+deboa-extras = { workspace = true, optional = true }
 http = { workspace = true }
 proc-macro2 = "1.0.103"
 serde = { workspace = true }
@@ -38,4 +38,4 @@ pluralizer = "0.5.0"
 
 [dev-dependencies]
 trybuild = "1.0.111"
-deboa-extras = { workspace = true, default-features = false }
+deboa-extras = { workspace = true }
