@@ -183,19 +183,17 @@ dependencies = [
 
 [[package]]
 name = "deboa-extras"
-version = "0.1.1-beta.3"
+version = "0.1.1-beta.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7e010a6eefb987288370212dfea5542881fe2a419a76259396a40abc654a686d"
+checksum = "bac35a0f5ef23a6781ba6c66ae6fb43a73093fedb36838b2614fc30af3a8a3e5"
 dependencies = [
  "bytes",
  "deboa",
  "futures",
  "http",
- "http-body-util",
  "hyper",
  "hyper-body-utils",
  "log",
- "mime",
  "mime_typed",
  "pin-project-lite",
  "rmp-serde",
@@ -774,12 +772,6 @@ checksum = "d1219ed1b7f229ee7104d281dd01d6802fe28bb6e95d292942c4daacdeb798c0"
 dependencies = [
  "libc",
 ]
-
-[[package]]
-name = "mime"
-version = "0.3.17"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6877bb514081ee2a7ff5ef9de3281f14a4dd4bceac4c09388074a6b5df8a139a"
 
 [[package]]
 name = "mime_typed"
@@ -1737,7 +1729,7 @@ dependencies = [
 
 [[package]]
 name = "vamo"
-version = "0.1.2-beta.3"
+version = "0.1.2-beta.4"
 dependencies = [
  "base64",
  "caramelo",
@@ -1750,7 +1742,7 @@ dependencies = [
 
 [[package]]
 name = "vamo-macros"
-version = "0.1.2-beta.3"
+version = "0.1.2-beta.4"
 dependencies = [
  "deboa",
  "deboa-extras",
