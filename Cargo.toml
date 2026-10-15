@@ -14,7 +14,7 @@ repository = "https://github.com/ararog/vamo"
 homepage = "https://github.com/ararog/vamo"
 readme = "README.md"
 license = "MIT OR Apache-2.0"
-rust-version = "1.85.0"
+rust-version = "1.88.0"
 
 [workspace.dependencies]
 deboa = { version = "0.1.5-beta.5" }
