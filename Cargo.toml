@@ -17,8 +17,8 @@ license = "MIT OR Apache-2.0"
 rust-version = "1.88.0"
 
 [workspace.dependencies]
-deboa = { version = "0.1.5-beta.5" }
-deboa-extras = { version  = "0.1.1-beta.4" }
+deboa = { version = "0.1.5-beta.6" }
+deboa-extras = { version  = "0.1.1-beta.5" }
 http = "1.5.0"
 serde = "1.0.228"
 vamo = { path = "vamo", version = "0.1.2-beta.2" }
