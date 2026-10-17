@@ -145,23 +145,19 @@ dependencies = [
 
 [[package]]
 name = "deboa"
-version = "0.1.5-beta.6"
+version = "0.1.5-beta.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e9a79c8cea89d7621a7b34a6395335646e6d2ead87a3a4291e795da352835308"
+checksum = "bbd4900884b33396090a6f70406d81dd361fcfc15a840968172269f8aa9aa883"
 dependencies = [
- "async-fn-stream",
  "async-lock",
  "base64",
  "bytes",
- "futures",
  "hashbrown 0.17.1",
  "http",
- "http-body",
  "http-body-util",
  "hyper",
  "hyper-body-utils",
  "log",
- "rand",
  "regex",
  "serde",
  "tackle",
