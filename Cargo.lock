@@ -1666,7 +1666,7 @@ dependencies = [
 
 [[package]]
 name = "vamo"
-version = "0.1.2-beta.5"
+version = "0.1.2-beta.6"
 dependencies = [
  "base64",
  "caramelo",
@@ -1679,7 +1679,7 @@ dependencies = [
 
 [[package]]
 name = "vamo-macros"
-version = "0.1.2-beta.5"
+version = "0.1.2-beta.6"
 dependencies = [
  "deboa",
  "deboa-extras",
