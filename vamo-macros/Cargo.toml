@@ -34,7 +34,7 @@ quote = "1.0.41"
 regex = { version = "1.12.4", default-features = false }
 titlecase = "3.6.0"
 vamo = { workspace = true }
-pluralizer = "0.5.0"
+pluralizer = "0.6.0"
 
 [dev-dependencies]
 trybuild = "1.0.111"
