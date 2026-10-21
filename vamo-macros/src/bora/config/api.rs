@@ -13,12 +13,11 @@ use crate::bora::{
     },
     token::utils::extract_params_from_path,
 };
-use proc_macro::TokenStream;
-use proc_macro2::{Span, TokenStream as TS2};
+use proc_macro2::{Span, TokenStream};
 use quote::{format_ident, quote};
 use syn::{
-    parse_macro_input, parse_str, punctuated::Punctuated, token::Paren, Data, DeriveInput, Ident,
-    LitStr, Type, TypeTuple, Visibility,
+    Data, DeriveInput, Ident, LitStr, Type, TypeTuple, Visibility, parse_str,
+    punctuated::Punctuated, token::Paren,
 };
 use titlecase::titlecase;
 
@@ -28,10 +27,10 @@ fn impl_function(
     format_module: &Ident,
     api_path: &LitStr,
     method_name: &Ident,
-    api_params: &TS2,
+    api_params: &TokenStream,
     req_body_type: &Type,
     res_body_type: &Type,
-) -> TS2 {
+) -> TokenStream {
     if matches!(res_body_type, Type::Tuple(_)) {
         quote! {
             pub async fn #method_name(&mut self, #api_params body: #req_body_type) -> VamoResult<#res_body_type> {
@@ -57,14 +56,14 @@ fn impl_function(
     }
 }
 
-fn get_operation(get: &GetStruct, acc: &mut (&mut TS2, &mut TS2)) {
+fn get_operation(get: &GetStruct, acc: &mut (&mut TokenStream, &mut TokenStream)) {
     let fields = &get.fields;
 
     let method = parse_str::<syn::Ident>("get").unwrap();
     let mut method_name = Ident::new("ident", Span::call_site());
     let mut api_path = LitStr::new("lit", Span::call_site());
-    let mut res_body_type = Type::Verbatim(TS2::new());
-    let mut api_params = TS2::new();
+    let mut res_body_type = Type::Verbatim(TokenStream::new());
+    let mut api_params = TokenStream::new();
     let mut format_name = Ident::new("ident", Span::call_site());
     let mut format_module = Ident::new("ident", Span::call_site());
 
@@ -116,15 +115,19 @@ fn get_operation(get: &GetStruct, acc: &mut (&mut TS2, &mut TS2)) {
         });
 }
 
-fn post_operation(post: &PostStruct, acc: &mut (&mut TS2, &mut TS2), unit_type: &Type) {
+fn post_operation(
+    post: &PostStruct,
+    acc: &mut (&mut TokenStream, &mut TokenStream),
+    unit_type: &Type,
+) {
     let fields = &post.fields;
 
     let method = parse_str::<syn::Ident>("post").unwrap();
     let mut method_name = Ident::new("ident", Span::call_site());
     let mut api_path = LitStr::new("lit", Span::call_site());
-    let mut req_body_type = Type::Verbatim(TS2::new());
+    let mut req_body_type = Type::Verbatim(TokenStream::new());
     let mut res_body_type = unit_type;
-    let mut api_params = TS2::new();
+    let mut api_params = TokenStream::new();
     let mut format_name = Ident::new("ident", Span::call_site());
     let mut format_module = Ident::new("ident", Span::call_site());
 
@@ -180,15 +183,19 @@ fn post_operation(post: &PostStruct, acc: &mut (&mut TS2, &mut TS2), unit_type: 
         ));
 }
 
-fn query_operation(post: &QueryStruct, acc: &mut (&mut TS2, &mut TS2), unit_type: &Type) {
+fn query_operation(
+    post: &QueryStruct,
+    acc: &mut (&mut TokenStream, &mut TokenStream),
+    unit_type: &Type,
+) {
     let fields = &post.fields;
 
     let method = parse_str::<syn::Ident>("post").unwrap();
     let mut method_name = Ident::new("ident", Span::call_site());
     let mut api_path = LitStr::new("lit", Span::call_site());
-    let mut req_body_type = Type::Verbatim(TS2::new());
+    let mut req_body_type = Type::Verbatim(TokenStream::new());
     let mut res_body_type = unit_type;
-    let mut api_params = TS2::new();
+    let mut api_params = TokenStream::new();
     let mut format_name = Ident::new("ident", Span::call_site());
     let mut format_module = Ident::new("ident", Span::call_site());
 
@@ -244,15 +251,19 @@ fn query_operation(post: &QueryStruct, acc: &mut (&mut TS2, &mut TS2), unit_type
         ));
 }
 
-fn put_operation(put: &PutStruct, acc: &mut (&mut TS2, &mut TS2), unit_type: &Type) {
+fn put_operation(
+    put: &PutStruct,
+    acc: &mut (&mut TokenStream, &mut TokenStream),
+    unit_type: &Type,
+) {
     let fields = &put.fields;
 
     let method = parse_str::<syn::Ident>("put").unwrap();
     let mut method_name = Ident::new("ident", Span::call_site());
     let mut api_path = LitStr::new("lit", Span::call_site());
-    let mut req_body_type = Type::Verbatim(TS2::new());
+    let mut req_body_type = Type::Verbatim(TokenStream::new());
     let mut res_body_type = unit_type;
-    let mut api_params = TS2::new();
+    let mut api_params = TokenStream::new();
     let mut format_name = Ident::new("ident", Span::call_site());
     let mut format_module = Ident::new("ident", Span::call_site());
 
@@ -310,14 +321,18 @@ fn put_operation(put: &PutStruct, acc: &mut (&mut TS2, &mut TS2), unit_type: &Ty
         ));
 }
 
-fn patch_operation(patch: &PatchStruct, acc: &mut (&mut TS2, &mut TS2), unit_type: &Type) {
+fn patch_operation(
+    patch: &PatchStruct,
+    acc: &mut (&mut TokenStream, &mut TokenStream),
+    unit_type: &Type,
+) {
     let fields = &patch.fields;
 
     let method = parse_str::<syn::Ident>("patch").unwrap();
     let mut method_name = Ident::new("ident", Span::call_site());
     let mut api_path = LitStr::new("lit", Span::call_site());
-    let mut api_params = TS2::new();
-    let mut req_body_type = Type::Verbatim(TS2::new());
+    let mut api_params = TokenStream::new();
+    let mut req_body_type = Type::Verbatim(TokenStream::new());
     let mut res_body_type = unit_type;
     let mut format_name = Ident::new("ident", Span::call_site());
     let mut format_module = Ident::new("ident", Span::call_site());
@@ -377,13 +392,13 @@ fn patch_operation(patch: &PatchStruct, acc: &mut (&mut TS2, &mut TS2), unit_typ
         ));
 }
 
-fn delete_operation(delete: &DeleteStruct, acc: &mut (&mut TS2, &mut TS2)) {
+fn delete_operation(delete: &DeleteStruct, acc: &mut (&mut TokenStream, &mut TokenStream)) {
     let fields = &delete.fields;
 
     let method = parse_str::<syn::Ident>("delete").unwrap();
     let mut method_name = Ident::new("ident", Span::call_site());
     let mut api_path = LitStr::new("lit", Span::call_site());
-    let mut api_params = TS2::new();
+    let mut api_params = TokenStream::new();
 
     fields
         .iter()
@@ -419,13 +434,7 @@ fn delete_operation(delete: &DeleteStruct, acc: &mut (&mut TS2, &mut TS2)) {
         });
 }
 
-pub fn bora(attr: TokenStream, item: TokenStream) -> TokenStream {
-    let item = parse_macro_input!(item as DeriveInput);
-    let attr = TS2::from(attr);
-
-    let parse_attr = attr.clone().into();
-    let root = parse_macro_input!(parse_attr as BoraApi);
-
+pub fn bora(attr: BoraApi, item: DeriveInput) -> TokenStream {
     let name = if matches!(item.vis, Visibility::Public(_)) && matches!(item.data, Data::Struct(_))
     {
         item.ident
@@ -435,8 +444,8 @@ pub fn bora(attr: TokenStream, item: TokenStream) -> TokenStream {
     };
 
     let struct_name = parse_str::<syn::Ident>(name.as_str()).unwrap();
-    let mut imports = TS2::new();
-    let mut struct_impl = TS2::new();
+    let mut imports = TokenStream::new();
+    let mut struct_impl = TokenStream::new();
 
     let unit_type = Type::Tuple(TypeTuple {
         paren_token: Paren(Span::call_site()),
@@ -444,7 +453,7 @@ pub fn bora(attr: TokenStream, item: TokenStream) -> TokenStream {
         attrs: Vec::new(), // Empty list means no elements
     });
 
-    root.operations
+    attr.operations
         .iter()
         .fold((&mut imports, &mut struct_impl), |mut acc, op| {
             match op {

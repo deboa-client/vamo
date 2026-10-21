@@ -86,9 +86,9 @@
 
 use core::panic;
 use pluralizer::pluralize;
-use proc_macro::TokenStream;
+use proc_macro2::TokenStream;
 use quote::quote;
-use syn::{parse_macro_input, Attribute, Ident, LitStr};
+use syn::{Attribute, DeriveInput, Ident, LitStr};
 
 fn extract_path(attr: &Attribute) -> Option<String> {
     let lit = attr.parse_args::<LitStr>();
@@ -106,10 +106,9 @@ fn extract_ident(attr: &Attribute) -> Option<Ident> {
     Some(ident.unwrap())
 }
 
-pub fn resource(input: TokenStream) -> TokenStream {
-    let ast = parse_macro_input!(input as syn::DeriveInput);
-    let name = &ast.ident;
-    let fields = match ast.data {
+pub fn resource(args: DeriveInput) -> TokenStream {
+    let name = &args.ident;
+    let fields = match args.data {
         syn::Data::Struct(data) => data.fields,
         _ => panic!("only structs are supported"),
     };
@@ -133,7 +132,7 @@ pub fn resource(input: TokenStream) -> TokenStream {
     let mut resource_name: Option<String> = None;
 
     let mut body_type: Option<Ident> = None;
-    for attr in ast.attrs {
+    for attr in args.attrs {
         if attr
             .path()
             .is_ident("name")

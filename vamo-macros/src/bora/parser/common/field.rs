@@ -1,6 +1,6 @@
 use syn::{
-    parse::{Parse, ParseStream},
     LitStr, Token, Type,
+    parse::{Parse, ParseStream},
 };
 
 pub struct NameStruct {

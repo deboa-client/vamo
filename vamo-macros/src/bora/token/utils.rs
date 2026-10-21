@@ -1,9 +1,8 @@
 use crate::bora::parser::utils::extract_path_params;
-use proc_macro2::Span;
-use proc_macro2::TokenStream;
+use proc_macro2::{Span, TokenStream};
 use quote::quote;
 use regex::Regex;
-use syn::{parse_str, LitStr};
+use syn::{LitStr, parse_str};
 
 pub fn extract_params_from_path(path: &LitStr) -> (TokenStream, LitStr) {
     let raw_path = path.value();

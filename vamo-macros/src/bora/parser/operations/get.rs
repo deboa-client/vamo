@@ -1,8 +1,7 @@
 use syn::{
-    parenthesized,
+    Ident, Token, parenthesized,
     parse::{Parse, ParseStream},
     punctuated::Punctuated,
-    Ident, Token,
 };
 
 use crate::bora::parser::common::field::{FormatStruct, NameStruct, PathStruct, ResBodyStruct};
