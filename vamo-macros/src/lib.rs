@@ -1,6 +1,7 @@
 #![doc = include_str!("../README.md")]
 #![deny(missing_docs)]
 use proc_macro::TokenStream;
+use syn::{DeriveInput, parse_macro_input};
 
 extern crate proc_macro;
 
@@ -8,6 +9,7 @@ mod bora;
 mod resource;
 
 use crate::bora::bora as bora_macro;
+use crate::bora::parser::api::BoraApi;
 use crate::resource::resource as resource_macro;
 
 #[proc_macro_attribute]
@@ -218,7 +220,9 @@ use crate::resource::resource as resource_macro;
 /// }
 /// ```
 pub fn bora(attr: TokenStream, item: TokenStream) -> TokenStream {
-    bora_macro(attr, item)
+    let attr = parse_macro_input!(attr as BoraApi);
+    let item = parse_macro_input!(item as DeriveInput);
+    bora_macro(attr, item).into()
 }
 
 #[proc_macro_derive(Resource, attributes(rid, name, body_type))]
@@ -269,5 +273,41 @@ pub fn bora(attr: TokenStream, item: TokenStream) -> TokenStream {
 /// }
 /// ```
 pub fn resource(input: TokenStream) -> TokenStream {
-    resource_macro(input)
+    let args = parse_macro_input!(input as syn::DeriveInput);
+    resource_macro(args).into()
+}
+
+#[cfg(test)]
+mod test {
+    use crate::{BoraApi, bora_macro, resource_macro};
+    use syn::{DeriveInput, parse_quote};
+
+    #[test]
+    fn test_expand_bora() {
+        let attr: BoraApi = parse_quote!(api(patch(
+            name = "patch_post",
+            path = "/posts/<id:i32>",
+            req_body = Post,
+            res_body = Post,
+            format = "json"
+        )));
+        let item: DeriveInput = parse_quote!(
+            pub struct PostService;
+        );
+        bora_macro(attr, item);
+    }
+
+    #[test]
+    fn test_expand_resource() {
+        let item: DeriveInput = parse_quote!(
+            #[derive(Resource, Serialize)]
+            #[name("users")]
+            #[body_type(JsonBody)]
+            struct User {
+                #[rid("id")]
+                id: String,
+            }
+        );
+        resource_macro(item);
+    }
 }

@@ -1,15 +1,15 @@
 #![allow(unused)]
 use crate::{
-    resource::{Resource, ResourceMethod},
     Vamo,
+    resource::{Resource, ResourceMethod},
 };
 use caramelo::{
     expect,
     matchers::{eq, header_value, method},
 };
-use deboa::{url::IntoUrl, HttpClient, Result, TestResult};
+use deboa::{HttpClient, Result, TestResult, url::IntoUrl};
 use deboa_extras::serde::json::JsonBody;
-use http::{header, HeaderName, Method, Version};
+use http::{HeaderName, Method, Version, header};
 use serde::Serialize;
 use std::error::Error;
 
@@ -55,11 +55,7 @@ impl Resource for User {
 const TEST_URL: &str = "https://localhost";
 
 pub fn test_url(port: Option<u16>) -> String {
-    if let Some(port) = port {
-        format!("{}:{}", TEST_URL, port)
-    } else {
-        TEST_URL.to_string()
-    }
+    if let Some(port) = port { format!("{}:{}", TEST_URL, port) } else { TEST_URL.to_string() }
 }
 
 #[test]

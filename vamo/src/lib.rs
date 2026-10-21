@@ -4,16 +4,16 @@ use std::sync::Arc;
 
 use crate::resource::{Resource, ResourceMethod};
 use deboa::{
+    Result,
     errors::{DeboaError, RequestError},
     request::DeboaRequest,
     response::DeboaResponse,
     serde::RequestBody,
     url::IntoUrl,
-    Result,
 };
 use http::{
-    header::{CONTENT_TYPE, HOST},
     HeaderMap, HeaderName, HeaderValue, Method, Version,
+    header::{CONTENT_TYPE, HOST},
 };
 use serde::Serialize;
 use url::Url;
