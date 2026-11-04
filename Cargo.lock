@@ -43,9 +43,9 @@ dependencies = [
 
 [[package]]
 name = "async-lock"
-version = "3.4.2"
+version = "3.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "290f7f2596bd5b78a9fec8088ccd89180d7f9f55b94b0576823bbbdc72ee8311"
+checksum = "0876700b0d007ad25d5508865a4259c3af9af6d296bf663a0d586d0bc3369f6f"
 dependencies = [
  "event-listener",
  "event-listener-strategy",
@@ -145,9 +145,9 @@ dependencies = [
 
 [[package]]
 name = "deboa"
-version = "0.1.5-beta.7"
+version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bbd4900884b33396090a6f70406d81dd361fcfc15a840968172269f8aa9aa883"
+checksum = "34a5efeb46424514ea2b2f6a988cd2c0148b45e2053ae927ae11909619c5e24d"
 dependencies = [
  "async-lock",
  "base64",
