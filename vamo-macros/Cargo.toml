@@ -1,6 +1,6 @@
 [package]
 name = "vamo-macros"
-version = "0.1.2-beta.6"
+version = "0.1.2"
 edition.workspace = true
 authors.workspace = true
 repository.workspace = true
@@ -26,7 +26,6 @@ proc-macro = true
 [dependencies]
 deboa = { workspace = true }
 deboa-extras = { workspace = true, optional = true }
-http = { workspace = true }
 proc-macro2 = "1.0.103"
 serde = { workspace = true }
 syn = { version = "3.0", features = ["full"] }
